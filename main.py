@@ -99,3 +99,5 @@ class ThugOnlineGame:
 
 thug = ThugOnlineGame(20,["a","b","c","d","e","f"], True)
 thug.play()
+
+#TODO: option is_computer to be set to false and new strategy introduced by Michal
