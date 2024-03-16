@@ -1,6 +1,7 @@
 from collections import Counter
 import math
-
+from datetime import datetime
+import os
 from typing import List
 
 
@@ -9,6 +10,7 @@ class ThugOnlineGame:
     board: List[str] = []
     alphabet: List[str]
     is_computer: bool
+    game_history: str = ""
 
     def __init__(self, max_length_board, alphabet, is_computer):
         self.max_length_board: int = max_length_board
@@ -49,7 +51,25 @@ class ThugOnlineGame:
             if len(self.board) == self.max_length_board:
                 print("Obviously, you are smarter than computer. Congrats!")
                 break
-            round_number+=1
+            self.update_game_history(round_number, position, letter)
+            round_number += 1
+
+        want_save_game = input("Do you want to save game? [y/n]")
+        if want_save_game=="y":
+            self.save_game()
+
+    def update_game_history(self, round_number, position, letter):
+        self.game_history += f"ROUND {round_number} \n"
+        self.game_history += f"Position = {position}" + f". Letter = {letter} \n"
+        self.game_history += f"Board = {self.board} \n \n"
+    def save_game(self):
+        formatted_datetime = datetime.now().strftime("%Y_%m_%d__%H_%M_%S")
+        path = f'games_history\game_{formatted_datetime}.txt'
+
+        with open(path, 'w') as f:
+            f.write(self.game_history)
+            print("Game saved succesfully")
+
     def print_matching_sequences(self,ind_1,ind_2):
         print("You lost because there is matching sequence: ", end = " ")
         for index, letter in enumerate(self.board):
@@ -79,5 +99,3 @@ class ThugOnlineGame:
 
 thug = ThugOnlineGame(20,["a","b","c","d","e","f"], True)
 thug.play()
-
-
