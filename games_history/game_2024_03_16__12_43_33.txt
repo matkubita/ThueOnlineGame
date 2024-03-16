@@ -1,0 +1,24 @@
+ROUND 2 
+Position = 0Letter = a 
+Board = ['a'] 
+ 
+ROUND 3 
+Position = 1Letter = b 
+Board = ['a', 'b'] 
+ 
+ROUND 4 
+Position = 1Letter = d 
+Board = ['a', 'd', 'b'] 
+ 
+ROUND 5 
+Position = 1Letter = e 
+Board = ['a', 'e', 'd', 'b'] 
+ 
+ROUND 6 
+Position = 1Letter = c 
+Board = ['a', 'c', 'e', 'd', 'b'] 
+ 
+ROUND 7 
+Position = 1Letter = e 
+Board = ['a', 'e', 'c', 'e', 'd', 'b'] 
+ 
