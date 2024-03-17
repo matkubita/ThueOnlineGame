@@ -1,3 +1,4 @@
+import random
 from collections import Counter
 import math
 from datetime import datetime
@@ -20,20 +21,18 @@ class ThugOnlineGame:
     def are_multisets_equal(self, multiset1, multiset2):
         return Counter(multiset1) == Counter(multiset2)
 
-    def is_repetition(self) -> bool:
+    def is_repetition(self, board) -> dict:
 
-        for i in range(1,math.floor(len(self.board)/2)+1):
-            for j in range(len(self.board)-2*i+1):
-                word_left = self.board[j:j+i]
-                word_right = self.board[j+i:j+2*i]
+        for i in range(1,math.floor(len(board)/2)+1):
+            for j in range(len(board)-2*i+1):
+                word_left = board[j:j+i]
+                word_right = board[j+i:j+2*i]
                 if self.are_multisets_equal(word_left,word_right):
-                    self.print_matching_sequences(range(j,j+i),range(j+i,j+2*i))
-
-                    return True
+                    return [True,range(j,j+i),range(j+i,j+2*i)]
                 # print("left: ",word_left, 'right', word_right)
             # print()
 
-        return False
+        return [False]
     def play(self) -> None:
 
         print("\033[95mHello. Welcome to ThugOnlineGame version Abelian. The board looks like this right now: {}\033[0m".format(self.board))
@@ -44,7 +43,8 @@ class ThugOnlineGame:
             letter = self.player_round()
             self.board.insert(position,letter)
             print("Board after this round looks like this: ", self.board)
-            if self.is_repetition():
+            if self.is_repetition(self.board)[0]:
+                self.print_matching_sequences(self.is_repetition(self.board)[1], self.is_repetition(self.board)[2])
                 print("Computer won. Maybe next time you will win :)")
                 break
 
@@ -93,11 +93,23 @@ class ThugOnlineGame:
         if len(self.board) == 0 or len(self.board) == 1:
             position = len(self.board)
         else:
-            position = 1
+            for pos in range( len(self.board)+1 ):
+                losing_position_counter = 0
+                for letter in self.alphabet:
+                    board_tmp = self.board.copy()
+                    board_tmp.insert(pos, letter)
+                    if self.is_repetition(board_tmp)[0]:
+                        losing_position_counter += 1
+                if losing_position_counter==len(self.alphabet):
+                    print("hehe - you lost :)")
+                    position = pos
+                else:
+                    position = 1
         print("Computer chooses this position: \033[0m\033[91m{}\033[0m".format(position))
         return position
 
-thug = ThugOnlineGame(20,["a","b","c","d","e","f"], True)
+thug = ThugOnlineGame(20,["a","b","c","d"], True)
 thug.play()
 
 #TODO: option is_computer to be set to false and new strategy introduced by Michal
+#TODO: validation for inputting letters that are not in alphabet
