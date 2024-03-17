@@ -18,30 +18,34 @@ class ThueOnlineGame:
         self.alphabet: List[str] = alphabet
         self.is_computer: bool = is_computer
 
-    def are_multisets_equal(self, multiset1, multiset2):
+    @staticmethod
+    def are_multisets_equal(multiset1, multiset2):
         return Counter(multiset1) == Counter(multiset2)
 
-    def is_repetition(self, board) -> dict:
+    @staticmethod
+    def is_repetition(board) -> List:
 
-        for i in range(1,math.floor(len(board)/2)+1):
+        for i in range(1, math.floor(len(board)/2)+1):
             for j in range(len(board)-2*i+1):
                 word_left = board[j:j+i]
                 word_right = board[j+i:j+2*i]
-                if self.are_multisets_equal(word_left,word_right):
-                    return [True,range(j,j+i),range(j+i,j+2*i)]
+                if ThueOnlineGame.are_multisets_equal(word_left, word_right):
+                    return [True, range(j, j+i), range(j+i, j+2*i)]
                 # print("left: ",word_left, 'right', word_right)
             # print()
 
         return [False]
+
     def play(self) -> None:
 
-        print("\033[95mHello. Welcome to ThugOnlineGame version Abelian. The board looks like this right now: {}\033[0m".format(self.board))
+        print("\033[95mHello. Welcome to ThugOnlineGame version Abelian. The board looks "
+              "like this right now: {}\033[0m".format(self.board))
         round_number = 1
         while True:
             print("\033[94m====== ROUND {} ======\033[0m".format(round_number))
             position = self.computer_round()
             letter = self.player_round()
-            self.board.insert(position,letter)
+            self.board.insert(position, letter)
             print("Board after this round looks like this: ", self.board)
             if self.is_repetition(self.board)[0]:
                 self.print_matching_sequences(self.is_repetition(self.board)[1], self.is_repetition(self.board)[2])
@@ -55,13 +59,14 @@ class ThueOnlineGame:
             round_number += 1
 
         want_save_game = input("Do you want to save game? [y/n]")
-        if want_save_game=="y":
+        if want_save_game == "y":
             self.save_game()
 
     def update_game_history(self, round_number, position, letter):
         self.game_history += f"ROUND {round_number} \n"
         self.game_history += f"Position = {position}" + f". Letter = {letter} \n"
         self.game_history += f"Board = {self.board} \n \n"
+
     def save_game(self):
         formatted_datetime = datetime.now().strftime("%Y_%m_%d__%H_%M_%S")
         path = f'games_history\game_{formatted_datetime}.txt'
@@ -70,15 +75,15 @@ class ThueOnlineGame:
             f.write(self.game_history)
             print("Game saved succesfully")
 
-    def print_matching_sequences(self,ind_1,ind_2):
-        print("You lost because there is matching sequence: ", end = " ")
+    def print_matching_sequences(self, ind_1, ind_2):
+        print("You lost because there is matching sequence: ", end=" ")
         for index, letter in enumerate(self.board):
             if index in ind_1:
                 print('\033[92m' + letter + '\033[0m', end=" ")
             elif index in ind_2:
                 print('\033[95m' + letter + '\033[0m', end=" ")
             else:
-                print(letter, end = " ")
+                print(letter, end=" ")
         print()
 
     def player_round(self) -> str:
@@ -86,21 +91,18 @@ class ThueOnlineGame:
         letter = input()
         return letter
 
-    def print_board(self) -> None:
-        print(f"board: {self.board}")
-
     def computer_round(self) -> int:
         if len(self.board) == 0 or len(self.board) == 1:
             position = len(self.board)
         else:
-            for pos in range( len(self.board)+1 ):
+            for pos in range(len(self.board)+1):
                 losing_position_counter = 0
                 for letter in self.alphabet:
                     board_tmp = self.board.copy()
                     board_tmp.insert(pos, letter)
                     if self.is_repetition(board_tmp)[0]:
                         losing_position_counter += 1
-                if losing_position_counter==len(self.alphabet):
+                if losing_position_counter == len(self.alphabet):
                     print("hehe - you lost :)")
                     position = pos
                 else:
@@ -108,7 +110,8 @@ class ThueOnlineGame:
         print("Computer chooses this position: \033[0m\033[91m{}\033[0m".format(position))
         return position
 
-thug = ThueOnlineGame(20,["a","b","c","d"], True)
+
+thug = ThueOnlineGame(20, ["a", "b", "c", "d"], True)
 thug.play()
 
 #TODO: option is_computer to be set to false and new strategy introduced by Michal
