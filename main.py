@@ -6,7 +6,7 @@ import os
 from typing import List
 
 
-class ThugOnlineGame:
+class ThueOnlineGame:
     max_length_board: int
     board: List[str] = []
     alphabet: List[str]
@@ -108,7 +108,7 @@ class ThugOnlineGame:
         print("Computer chooses this position: \033[0m\033[91m{}\033[0m".format(position))
         return position
 
-thug = ThugOnlineGame(20,["a","b","c","d"], True)
+thug = ThueOnlineGame(20,["a","b","c","d"], True)
 thug.play()
 
 #TODO: option is_computer to be set to false and new strategy introduced by Michal
