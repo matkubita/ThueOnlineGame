@@ -12,6 +12,8 @@ class ThueOnlineGame:
     alphabet: List[str]
     is_computer: bool
     game_history: str = ""
+    A_1: set
+    A_2: set
 
     def __init__(self, max_length_board, alphabet, is_computer):
         self.max_length_board: int = max_length_board
@@ -107,6 +109,26 @@ class ThueOnlineGame:
                     position = pos
                 else:
                     position = 1
+        print("Computer chooses this position: \033[0m\033[91m{}\033[0m".format(position))
+        return position
+    # def computer_round_tactic_2(self) -> int:
+    #     if len(self.board) == 0 or len(self.board) == 1:
+    #         position = len(self.board)
+    #     if len(self.board)==2:
+    #         self.A_1.add(self.board[0])
+    #         self.A_2.add(self.board[1])
+    #         position = 1
+    #     if len(self.board)==3:
+    #         self.A_1.add(self.board[1])
+    #         # we need to find position where A_1 _ A_2
+    #         for i in range(len(self.board)):
+    #             if self.board[i] in self.A_2:
+    #                 return i
+    #     else:
+    #
+    #         #alphabet A = [a,b,c,d,e]
+
+
         print("Computer chooses this position: \033[0m\033[91m{}\033[0m".format(position))
         return position
 
