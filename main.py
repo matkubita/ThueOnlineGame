@@ -52,13 +52,13 @@ class ThueOnlineGame:
                 self.print_matching_sequences(self.is_repetition(self.board)[1], self.is_repetition(self.board)[2])
                 print("Computer won. Maybe next time you will win :)")
                 self.update_game_history(round_number, position, letter)
-                self.update_game_history("Computer won because there is repetition")
+                self.update_game_history_with_text("Computer won because there is repetition")
                 break
 
             if len(self.board) == self.max_length_board:
                 print("Obviously, you are smarter than computer. Congrats!")
                 self.update_game_history(round_number, position, letter)
-                self.update_game_history("Player won because board has max length")
+                self.update_game_history_with_text("Player won because board has max length")
                 break
             self.update_game_history(round_number, position, letter)
             round_number += 1
@@ -67,13 +67,14 @@ class ThueOnlineGame:
         if want_save_game == "y":
             self.save_game()
 
-    def update_game_history(self, round_number_or_info, position="", letter="") -> None:
-        if position=="" and letter =="":
-            self.game_history+= round_number_or_info
-            return
+    def update_game_history(self, round_number_or_info, position, letter) -> None:
+
         self.game_history += f"ROUND {round_number_or_info} \n"
         self.game_history += f"Position = {position}" + f". Letter = {letter} \n"
         self.game_history += f"Board = {self.board} \n \n"
+
+    def update_game_history_with_text(self, text:str) -> None:
+        self.game_history += text
 
     def save_game(self):
         formatted_datetime = datetime.now().strftime("%Y_%m_%d__%H_%M_%S")
