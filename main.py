@@ -10,15 +10,14 @@ class ThueOnlineGame:
     max_length_board: int
     board: List[str] = []
     alphabet: List[str]
-    is_computer: bool
     game_history: str = ""
-    A_1: set
-    A_2: set
+    A_1: set = set()
+    A_2: set = set()
 
-    def __init__(self, max_length_board, alphabet, is_computer):
+    def __init__(self, max_length_board, alphabet):
         self.max_length_board: int = max_length_board
         self.alphabet: List[str] = alphabet
-        self.is_computer: bool = is_computer
+
 
     @staticmethod
     def are_multisets_equal(multiset1, multiset2):
@@ -45,17 +44,21 @@ class ThueOnlineGame:
         round_number = 1
         while True:
             print("\033[94m====== ROUND {} ======\033[0m".format(round_number))
-            position = self.computer_round()
+            position = self.computer_round_tactic_2()
             letter = self.player_round()
             self.board.insert(position, letter)
             print("Board after this round looks like this: ", self.board)
             if self.is_repetition(self.board)[0]:
                 self.print_matching_sequences(self.is_repetition(self.board)[1], self.is_repetition(self.board)[2])
                 print("Computer won. Maybe next time you will win :)")
+                self.update_game_history(round_number, position, letter)
+                self.update_game_history("Computer won because there is repetition")
                 break
 
             if len(self.board) == self.max_length_board:
                 print("Obviously, you are smarter than computer. Congrats!")
+                self.update_game_history(round_number, position, letter)
+                self.update_game_history("Player won because board has max length")
                 break
             self.update_game_history(round_number, position, letter)
             round_number += 1
@@ -64,8 +67,11 @@ class ThueOnlineGame:
         if want_save_game == "y":
             self.save_game()
 
-    def update_game_history(self, round_number, position, letter):
-        self.game_history += f"ROUND {round_number} \n"
+    def update_game_history(self, round_number_or_info, position="", letter="") -> None:
+        if position=="" and letter =="":
+            self.game_history+= round_number_or_info
+            return
+        self.game_history += f"ROUND {round_number_or_info} \n"
         self.game_history += f"Position = {position}" + f". Letter = {letter} \n"
         self.game_history += f"Board = {self.board} \n \n"
 
@@ -91,6 +97,10 @@ class ThueOnlineGame:
     def player_round(self) -> str:
         print(f"Choose letter from available alphabet: {self.alphabet}")
         letter = input()
+        while letter not in self.alphabet:
+            print(f"This letter {letter} is not in {self.alphabet}. Please provide letter once again")
+            letter = input()
+
         return letter
 
     def computer_round(self) -> int:
@@ -111,30 +121,34 @@ class ThueOnlineGame:
                     position = 1
         print("Computer chooses this position: \033[0m\033[91m{}\033[0m".format(position))
         return position
-    # def computer_round_tactic_2(self) -> int:
-    #     if len(self.board) == 0 or len(self.board) == 1:
-    #         position = len(self.board)
-    #     if len(self.board)==2:
-    #         self.A_1.add(self.board[0])
-    #         self.A_2.add(self.board[1])
-    #         position = 1
-    #     if len(self.board)==3:
-    #         self.A_1.add(self.board[1])
-    #         # we need to find position where A_1 _ A_2
-    #         for i in range(len(self.board)):
-    #             if self.board[i] in self.A_2:
-    #                 return i
-    #     else:
-    #
-    #         #alphabet A = [a,b,c,d,e]
+
+    def computer_round_tactic_2(self) -> int:
+        if len(self.board) == 0 or len(self.board) == 1:
+            print("Computer chooses this position: \033[0m\033[91m{}\033[0m".format(len(self.board)))
+            return len(self.board)
+        if len(self.board)==2:
+            self.A_1.add(self.board[0])
+            self.A_2.add(self.board[1])
+        else:
+            letter_to_be_added = self.get_letter_from_board_not_in_A_1_A_2()
+            if letter_to_be_added is not None:
+                if len(self.A_1) > len(self.A_2):
+                    self.A_2.add(letter_to_be_added)
+                else:
+                    self.A_1.add(letter_to_be_added)
+
+        for i in range(len(self.board)):
+            if self.board[i] in self.A_2:
+                print("Computer chooses this position: \033[0m\033[91m{}\033[0m".format(i))
+                return i
+
+    def get_letter_from_board_not_in_A_1_A_2(self):
+        for letter in self.board:
+            if (letter not in self.A_1) and (letter not in self.A_2):
+                return letter
+        return None
 
 
-        print("Computer chooses this position: \033[0m\033[91m{}\033[0m".format(position))
-        return position
-
-
-thug = ThueOnlineGame(20, ["a", "b", "c", "d"], True)
+thug = ThueOnlineGame(20, ["a", "b", "c", "d"])
 thug.play()
 
-#TODO: option is_computer to be set to false and new strategy introduced by Michal
-#TODO: validation for inputting letters that are not in alphabet
