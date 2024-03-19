@@ -39,7 +39,7 @@ class ThueOnlineGame:
 
     def play(self) -> None:
 
-        print("\033[95mHello. Welcome to ThugOnlineGame version Abelian. The board looks "
+        print("\033[95mHello. Welcome to ThueOnlineGame version Abelian. The board looks "
               "like this right now: {}\033[0m".format(self.board))
         round_number = 1
         while True:

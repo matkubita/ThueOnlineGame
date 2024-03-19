@@ -1,0 +1,21 @@
+ROUND 1 
+Position = 0. Letter = a 
+Board = ['a'] 
+ 
+ROUND 2 
+Position = 1. Letter = b 
+Board = ['a', 'b'] 
+ 
+ROUND 3 
+Position = 1. Letter = c 
+Board = ['a', 'c', 'b'] 
+ 
+ROUND 4 
+Position = 2. Letter = d 
+Board = ['a', 'c', 'd', 'b'] 
+ 
+ROUND 5 
+Position = 2. Letter = d 
+Board = ['a', 'c', 'd', 'd', 'b'] 
+ 
+Computer won because there is repetition
